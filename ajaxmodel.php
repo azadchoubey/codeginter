@@ -4,22 +4,19 @@ class ajaxmodel extends CI_Model{
 
 public function checklogin($username){
 
-    $query=$this->db->select('*')
-    ->$this->db->from('user')
-    ->$this->db->where($username)
-    ->$this->db->get();
+    $q=$this->db->where(['Username'=>$username])
+    ->get('user');
+if($q->num_rows()>0){ 
+    
+  return true;
 
-   if(count($query)>0){
-        echo "username alredy taken";
+}else{
 
-   }
-else{
-    echo " username is avalible";
-
+    return false;
 
 }
-}}
-
+}
+}
 
 
 
