@@ -11,10 +11,10 @@
   <body>
   <div class="container mt-5 form-control border border-success">   
       <h3 class="mt-5" style="text-align: center;"> Login To Your Account </h3>
-<?php echo form_open();?>
+
       <div class="form-floating mb-3 mt-5">
           <p class="result"></p>
-  <?php echo form_input(['type'=>'username','class'=>'form-control mr-md-3','id'=>'floatingInput','placeholder'=>'username']); ?>
+  <?php echo form_input(['type'=>'Username', 'value'=>'','class'=>'form-control mr-md-3','id'=>'floatingInput','placeholder'=>'username']); ?>
   <label for="floatingInput">Username</label>
 </div>
 <div class="form-floating ">
@@ -28,15 +28,26 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
     <script>
         $(document).ready(function(){
-                let userame=$('#floatingInput').val();
-
+               
                 $('#floatingInput').keyup(function(){
+                  let userame=$('#floatingInput').val();
+
                     $.ajax({
                         url: '<?php echo base_url('index.php/ajaxincode/ajaxlogin/ajaxloginpage');?>' ,
                         type: "POST",
                         data:{Username:userame},
+                        dataType: 'jsonp',
+
                         success: function(data){
-                            $('.result').html(data);
+
+                          if(data){
+                            $('.result').html("username already taken");
+                          }
+                       
+                    else{
+                            $('.result').html("username is available");
+                          }
+                           
 
 
                         }
