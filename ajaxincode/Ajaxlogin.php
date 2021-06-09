@@ -15,21 +15,22 @@ public function ajaxsignup(){
 }
 
 public function ajaxloginpage(){
-    if($username=$this->input->post('Username')){
-    
+    $username=$this->input->post('Username');
+
         $this->load->model('ajaxmodel');
-     $this->ajaxmodel->checklogin($username);
 
+    $r=$this->ajaxmodel->checklogin($username);
+    
+        echo json_encode($r);
+   
 
     }
-    else{
-
-    }
+   
 
 
 
 
-}
+
 
 
 }
