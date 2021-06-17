@@ -8,60 +8,125 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  
+        <link rel = "stylesheet" type = "text/css" 
+   href = "<?php echo base_url(); ?>css/loading.css">
     <title>Ajax Login</title>
 </head>
 
 <body>
-    <div class="container mt-5 form-control border border-success">
+    <div class="container mt-5 col-5 border border-success">
         <h3 class="mt-5" style="text-align: center;"> Login To Your Account </h3>
-        <div class="form-floating mb-3 mt-5">
+        <div class="row mt-5">
+        <p id="result" class="text-danger "></p>
 
-            <?php echo form_input(['type'=>'Username', 'value'=>'','class'=>'form-control mr-md-3','id'=>'floatingInput','placeholder'=>'username']); ?>
+            <div class="col-11 form-floating">
+                <?php echo form_input(['type'=>'Username', 'value'=>'','class'=>'form-control mr-md-3','id'=>'floatingInput','placeholder'=>'username']); ?>
 
-            <label for="floatingInput">Username</label>
-            <p id="result" class="text-danger "></p>
-        </div>
-        <div class="form-floating ">
-            <?php echo form_input(['type'=>'Password','class'=>'form-control','id'=>'floatingPassword','placeholder'=>'Password']); ?>
-            <label for="floatingPassword">Password</label>
-            <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-3 mb-3 mr-4" id='submit'
-                disabled>Login</button>
-            <?php echo  anchor('ajaxincode/ajaxlogin/ajaxsignup','Create a new account !' ); ?>
+                <label for="floatingInput"> Username</label>
+               
+            </div>
+            <div class="col-11 form-floating mt-4">
 
+                <?php echo form_input(['type'=>'Password','class'=>'form-control','id'=>'floatingPassword','placeholder'=>'Password','required'=>'']); ?>
+                <label for="floatingPassword"> Password</label>
+                
+                <div id="cover-spin"></div>
+
+                <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-3 mb-3 mr-4" id='submit'
+                    >Login</button>
+                <?php echo  anchor('ajaxincode/ajaxlogin/ajaxsignup','Create a new account !' ); ?>
+            </div>
         </div>
     </div>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
     $(document).ready(function() {
+      
+        // $('#floatingPassword').mouseout(function() {
+        //     let password = $('#floatingPassword').val();
+        // let userame = $('#floatingInput').val();
 
-        $('#floatingInput').mouseout(function() {
-            let userame = $('#floatingInput').val();
+        //     if (userame.length > 3 && password.length > 3) {
 
-            $.ajax({
-                url: '<?php echo base_url('index.php/ajaxincode/ajaxlogin/ajaxloginpage');?>',
-                type: "POST",
-                dataType: 'json',
-                data: {
-                    Username: userame
-                },
-                success: function(data) {
-                    $('#result').hide();
-                    if (data == true) {
-                        submit.disabled = false;
-                        $('#floatingInput').css('border-color', 'Green ');
-                    } else {
-                        $('#result').fadeIn();
-                        $('#result').html("invaild username");
-                        $('#floatingInput').css('border-color', 'Red');
-                        submit.disabled = true;
-                    }
+        //         $.ajax({
+        //             url: '<?php echo base_url('index.php/ajaxincode/ajaxlogin/ajaxloginpage');?>',
+        //             type: "POST",
+        //             dataType: 'json',
+        //             data: {
+        //                 Username: userame
+        //             },
+        //             success: function(data) {
+        //                 if (data == true) {
+        //                     $('#floatingInput').css('border-color', 'Green ');
+        //                     submit.disabled = false;
 
-                }
+        //                 } else {
+
+        //                     $('#result').fadeIn();
+        //                     $('#result').html("invaild username");
+        //                     $('#floatingInput').css('border-color', 'Red');
+        //                     setTimeout(function() {
+        //                         $('#result').fadeOut()
+        //                     }, 3000)
+        //                     submit.disabled = true;
+        //                 }
+
+        //             }
+
+        //         })
+
+        //     } else {
+        //         submit.disabled = true;
+
+        //     }
+        // })
+
+       
+                $('#submit').click(function() {
+
+                    $('#cover-spin').show(0);
+                    let password = $('#floatingPassword').val();
+                         let userame = $('#floatingInput').val();
+                    $.ajax({
+                        url: '<?php echo base_url('index.php/ajaxincode/ajaxlogin/submitlogin'); ?>',
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                             Username: userame, 
+                             Password: password
+
+                    },
+                        success: function(data) {
+                            if (data == true) {
+                                location.replace("http://localhost/ci/index.php/ajaxincode/ajaxlogin/homepage")
+                            }else if(data == 2){
+                                $('#cover-spin').hide(0);
+
+                                $('#result').html("invaild username");
+                            $('#floatingInput').css('border-color', 'Red');
+                            setTimeout(function() {
+                                $('#result').fadeOut()
+                            }, 3000)
+                            }
+                            else {
+                                $('#cover-spin').hide(0);
+
+                                $('#floatingPassword').css('border-color', 'Red');
+
+                                $('#result').html("invaild Password");
+
+                            }
+
+                        }
 
 
-            })
+                    })
 
-        })
+                })
+
     })
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
