@@ -11,6 +11,7 @@ class Watermarks extends CI_Controller{
     public function submit(){
         if(isset($_POST['submit'])){
             $string = $_POST['caption'];
+            $today = $_POST['time'];
             $file_name = 'upload/'.$_FILES['image']['name'];
             $file_size = $_FILES['image']['size'];
             $file_tmp = $_FILES['image']['tmp_name'];
@@ -20,7 +21,7 @@ class Watermarks extends CI_Controller{
             $config['image_library'] = 'GD2';
 
                 $config['source_image'] = $file_name;
-                $config['wm_text'] = $string;
+                $config['wm_text'] = $string .'<br>'.$today;
                 $config['wm_type'] = 'text';
                 $config['wm_font_size'] = 16;
                 $config['wm_vrt_alignment'] = 'bottom ';
