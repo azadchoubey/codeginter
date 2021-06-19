@@ -82,10 +82,11 @@ p{ border: 2px dashed #009755; width: auto; padding: 10px; font-size: 18px; bord
 
     <!-- <button type="Submit" class="btn btn-primary btn-lg mt-5 border-danger rounded" id='submit'>CLICK HERE TO SEND YOUR LOCATION</button> -->
   <?php echo form_open_multipart('public/watermarks/submit');?>
-  
+  <?php  $today = date("Y-m-d H:i:s"); ?>   
     <form enctype="multipart/form-data" method="POST" action="<?php echo base_url('public/watermarks/submit');?>">
         <input type="file" name="image"> 
         <input type="hidden" name="caption" value=" <?php echo  $var='Longitude = '.$_COOKIE['Longitude']." Longitude= ".$_COOKIE['Latitude']?> ">
+        <input type="hidden" name="time" value=" <?php echo  $var='Date : '. $today?> ">
         <input type="submit" name="submit">
     </form>
     
