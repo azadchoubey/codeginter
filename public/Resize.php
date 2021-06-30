@@ -115,7 +115,7 @@ if(isset($_FILES['image'])){
         {
                 $error = array('error' => $this->upload->display_errors());
 
-                $this->load->view('resizeview/pdftoimage', $error);
+                $this->load->view('resizeview/pdftojpg', $error);
 
         }
         else
@@ -125,31 +125,24 @@ if(isset($_FILES['image'])){
             $pdfPath = $config['upload_path'] . '/' .$this->upload->data('file_name');
            
           
-            $jpg="upload/pdftojpg/".microtime(true).".jpg";
+            $jpg="upload/jpg/".microtime(true).".jpg";
  
                //make sure that apache has permissions to write in this folder! (common problem)
             
             //execute ImageMagick command 'convert' and convert PDF to JPG with applied settings
-            exec('magick convert "'.$pdfPath.'" -resize 1600 "'.$jpg.'"', $output, $return_var);
+            exec('magick convert -density 300 -colorspace RGB -trim "'.$pdfPath.'" -quality 100 -background white -alpha remove "'.$jpg.'"', $output, $return_var);
             
-         
-            if($return_var == 0) {              //if exec successfuly converted pdf to jpg
-                $img = new imagick( $jpg);
-                $img->setResolution(300, 300);
-                $img->readImage( ); //Open after yuo set resolution.
-                $img->setImageUnits(Imagick::RESOLUTION_PIXELSPERINCH); //Declare the units for resolution.
-                $img->setImageFormat('jpeg');
-                $img->setImageCompression(Imagick::COMPRESSION_JPEG);
-                $img->setImageCompressionQuality(100);
-                $img->writeImage($config['upload_path'] . '/' . str_replace('pdf', 'jpeg', $this->upload->data('file_name')));
-                $img->clear();
-                $img->destroy();
+         echo $return_var;
+            if($return_var == 0) {      
+                        //if exec successfuly converted pdf to jpg
+                        echo 
+                        '<div class="contanier text-center mt-5"> <img src = "'.base_url('ci/'.  $jpg ).'" width="720" height="800" > </div>';
             }
             else echo "Conversion failed.<br />".$output;
     
             
            
-            $this->load->view('resizeview/pdftoimage',  $data);
+            $this->load->view('resizeview/pdftojpg',  $data);
       
 }
 
@@ -159,7 +152,7 @@ if(isset($_FILES['image'])){
 
 }   else{
 
-    $this->load->view('resizeview/pdftoimage');
+    $this->load->view('resizeview/pdftojpg');
 }
 
 
