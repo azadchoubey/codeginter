@@ -101,13 +101,13 @@ if(isset($_FILES['image'])){
 
 }public function pdftojpg(){
 
-  
 
     if(isset($_FILES['pdf'])){
         $config['upload_path']          = "upload/pdftojpg";
         $config['allowed_types']        = 'pdf'; 
         $config['file_permissions'] = 0777;
-        $config['overwrite']        = true;
+        $config['overwrite']        = true;  
+        $config['max_size']  = '0';
         $this->load->library('upload', $config);
        
      
@@ -122,27 +122,19 @@ if(isset($_FILES['image'])){
         {
             $data = array('result' => $this->upload->data());
 
-            $pdfPath = $config['upload_path'] . '/' .$this->upload->data('file_name');
-           
+            
           
-            $jpg="upload/jpg/".microtime(true).".jpg";
- 
-               //make sure that apache has permissions to write in this folder! (common problem)
-            
-            //execute ImageMagick command 'convert' and convert PDF to JPG with applied settings
-            exec('magick convert -density 300 -colorspace RGB -trim "'.$pdfPath.'" -quality 100 -background white -alpha remove "'.$jpg.'"', $output, $return_var);
-            
-         echo $return_var;
-            if($return_var == 0) {      
-                        //if exec successfuly converted pdf to jpg
-                        echo 
-                        '<div class="contanier text-center mt-5"> <img src = "'.base_url('ci/'.  $jpg ).'" width="720" height="800" > </div>';
-            }
-            else echo "Conversion failed.<br />".$output;
     
+          
+            $this->load->view('resizeview/pdfview', $data);
+ 
+     
             
-           
-            $this->load->view('resizeview/pdftojpg',  $data);
+            
+
+
+
+
       
 }
 
@@ -153,6 +145,65 @@ if(isset($_FILES['image'])){
 }   else{
 
     $this->load->view('resizeview/pdftojpg');
+}
+if(isset($_POST['sub'])){
+$pdf= $this->input->post('file');
+    $jpg="upload/jpg/". rand(10000,99999).".jpg";
+
+   //make sure that apache has permissions to write in this folder! (common problem)
+             
+            //execute ImageMagick command 'convert' and convert PDF to JPG with applied settings
+            exec('magick convert -density 600 -colorspace RGB -trim "'. $pdf.'" -quality 100 -background white -alpha remove -resize 1600x1200 "'.$jpg.'"', $output, $return_var);
+            
+        
+            if($return_var == 0) {      
+                        //if exec successfuly converted pdf to jpg
+             
+
+                        
+                        $dir = 'upload/jpg';
+            
+                        $nofiles = 0;
+                        
+                            if ($handle = opendir($dir)) {
+                            while (( $file = readdir($handle)) !== false ) {
+                                if ( $file == '.' || $file == '..' || is_dir($dir.'/'.$file) ) {
+                                    continue;
+                                }
+                        
+                                if ((time() - filemtime($dir.'/'.$file)) > (10)) {
+                                    $nofiles++;
+                                    unlink($dir.'/'.$file);
+                                }
+                            }
+                            closedir($handle);
+                            echo "Total files deleted: $nofiles \n";
+                        }
+
+
+                      
+            
+               }
+
+            else echo "Conversion failed.<br />".$output;
+
+           
+            $dir = 'upload/jpg';
+            
+            if ($handle = opendir($dir)) {
+                while (( $file = readdir($handle)) !== false ) {
+                    if ( $file == '.' || $file == '..' || is_dir($dir.'/'.$file) ) {
+                        continue;
+                    }
+                   
+                 echo '<div class="contanier text-center mt-5"> <img src = "'.base_url('upload/jpg/'.$file ).'" width="720" height="800" > </div>';
+                 echo '<a href="'.base_url('upload/jpg/'.$file).'" class="btn btn-primary btn-file mt-4 mb-3 ml-3" download >Download</a>';
+                }
+
+                }
+             
+
+
 }
 
 
