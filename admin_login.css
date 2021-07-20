@@ -1,0 +1,36 @@
+body {
+    background: #15a581;
+}
+body:after {
+    content:'';
+    position: fixed;
+    height: 100%;
+    width: 100%;
+   top: 80%;
+    background: #f8f9fa
+}
+
+
+.container{
+    position: absolute; /*or fixed*/;
+
+    height: 300px;
+    left: 35%;  
+    top:10%;
+    width: 450px;
+    padding: 20px;
+    background: #ffffff;
+    text-align: center;
+    border: 1px solid #0a0805;
+    color: rgb(8, 1, 1);
+
+}
+.form-control:hover {
+    border:4px solid #15a581;
+}hr.style-two {
+    border: 0;
+    height: 0;
+    width: 350px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
